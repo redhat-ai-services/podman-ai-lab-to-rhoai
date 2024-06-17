@@ -1,0 +1,27 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+labels:
+  opendatahub.io/dashboard: "true"
+metadata:
+  annotations:
+    openshift.io/display-name: LlamaCPP
+  name: llamacpp
+spec:
+  containers:
+    - image: quay.io/jhurlocker/llama-cpp-0612:latest
+      env:
+        - name: MODEL_PATH
+          value: /mnt/models
+        - name: HOST
+          value: 0.0.0.0
+      name: kserve-container
+      ports:
+        - containerPort: 8080
+          name: http1
+          protocol: TCP
+          hostPort: 8001
+      securityContext:
+        runAsNonRoot: true
+  multiModel: false
+  supportedModelFormats:
+    - name: any
