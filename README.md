@@ -2,23 +2,25 @@
 
 **Overview**
 
-The following code shows you how to go from a chatbot reciepe in the Podman Desktop AI Lab extension to a RAG chatbot deployed on OpenShift and OpenShift AI.
+The following article shows you how to go from a chatbot reciepe in the Podman Desktop AI Lab extension to a RAG chatbot deployed on OpenShift and OpenShift AI.
 
-## Requirements
-It is expected that you have admin access to an OpenShift 4.12+ cluster
 
 * <a href="#arch">Architecture</a>
+* <a href="#req">Requirements</a>
 * <a href="#podman_ai_lab">Podman AI Lab</a>
 * <a href="#deploy_rhoai">Deploy RHAOI</a>
 * <a href="#deploy_elastic">Deploy Elasticsearch Vector DB</a>
 * <a href="#deploy_minio">Deploy s3 Storage (Minio)</a>
 * <a href="#custom_runtime">Create Custom Model Serving Runtime</a>
 * <a href="#update_chat">Update the Chat Recipe Application</a>
-* 
+
 
 ## <div id="arch">High Level Architecture</a>
 
 ![Architecture](img/high_level_overview_arch.png)
+
+## <div id="req">Requirements</a>
+It is expected that you have admin access to an OpenShift 4.12+ cluster. The follwing code was tested with an OpenShift 4.15 cluster.
 
 # <div id="podman_ai_lab">Podman AI Lab</a>
 ## Install Podman Desktop and Podman AI Lab extension
