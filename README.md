@@ -115,7 +115,7 @@ Once the pod has a Running status and is ready you can run the below command.
 <ol>
 
 <li>
-After you've logged into the OpenShift cluster you can now deploy the Elasticsearch operator.
+We'll now deploy the Elasticsearch operator. This will be our vector database.
 
 <pre>oc apply -k ./components/elasticsearch/base/</pre>
 </li>
@@ -173,7 +173,7 @@ Add the CONNECTION_STRING key/value as a ConfigMap environment variable.
 <li>
 PASSWORD - Create a secret environment variable with the Elasticsearch secret value.
 <pre>oc get secret elasticsearch-sample-es-elastic-user -n elastic-vectordb -o jsonpath="{.data['elastic']}" | base64 -d > elastic_pass.txt</pre>
-Add the PASSWORD key/value as a Secret environment variable. 
+Add the PASSWORD key/value as a Secret environment variable. The password is in the <b>elastic_pass.txt</b> file that was created by the above oc command.
 </li>
 </li>
 </ul>
@@ -188,7 +188,8 @@ Click on the <b>Create Workbench</b> button. Your workbench should start in a fe
 </li>
 <li>
 Open your workbench after it has started and login.
-<br/><br/><b>Note:</b><i> If you have insufficient resources to start a medium container size then stop the workbench and change the workbench to start as a small container size.</i>
+<br/><b>Note:</b><i> If you have insufficient resources to start a medium container size then stop the workbench and change the workbench to start as a small container size.</i>
+<br/><br/>
 </li>
 <li>
 Upload or import the ./notebooks/Langchain-ElasticSearchVector-ingest.ipynb notebook to your workbench.
@@ -322,7 +323,7 @@ cd ..
 <li>
 Run the following oc commands to enable the Single Model Serving runtime for OpenShift AI. We'll refresh the RHOAI dashboard by deleting the pods.
 <pre>oc apply -k ./components/model-server/components-serving
-oc delete pod -l rhods-dashboard -n redhat-ods-applications
+oc delete pod -l app=rhods-dashboard -n redhat-ods-applications
 </pre>
 </li>
 </ol>
