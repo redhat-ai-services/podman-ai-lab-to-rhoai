@@ -3,7 +3,8 @@
 **Overview**
 
 The following article shows you how to go from a chatbot reciepe in the Podman Desktop AI Lab extension to a RAG chatbot deployed on OpenShift and OpenShift AI.
-
+<br/><br/>
+<b>TODO</b> STATE THE GOAL
 
 * <a href="#arch">Architecture</a>
 * <a href="#req">Requirements</a>
@@ -285,6 +286,13 @@ Run the following oc command to deploy Serverless.
 <pre>oc apply -k ./components/openshift-serverless/operator/overlays/stable</pre>
 </li>
 <li>
+Wait until the Service Mesh and Serverless operators have installed successfully. 
+<pre>watch oc get csv -n openshift-operators</pre>
+
+![Operator Status](img/csv_status.png)
+
+</li>
+<li>
 We'll be using the single stack serving in OpenShift AI so we'll want use a trusted certificate instead of a self signed one. This will allow our chatbot to access the model inference endpoint.
 <br/><br/>
 Run the below oc commands
@@ -323,10 +331,20 @@ cd ..
 </li>
 </ul>
 <li>
-Run the following oc commands to enable the Single Model Serving runtime for OpenShift AI. We'll refresh the RHOAI dashboard by deleting the pods.
+Run the following oc commands to enable the Single Model Serving runtime for OpenShift AI. 
 <pre>oc apply -k ./components/model-server/components-serving
-oc delete pod -l app=rhods-dashboard -n redhat-ods-applications
 </pre>
+</li>
+<li>
+It will take around 5 to 10 minutes for the changes to be applied. Single-model serving should be ready when Service Mesh and Serverless have the below instances created. Open the OpenShift web console and go to <b>Operators -> Installed Operators</b>.
+<br/><br/>
+
+![Knative Instance](img/knative_instance.png)
+
+<br/>
+
+![Service Mesh Instance](img/servicemesh_instance.png)
+
 </li>
 </ol>
 <li>
@@ -543,5 +561,13 @@ In the OpenShift web console you can check the model server logs under the podma
 Congratulations! You've successfully taken a model and application from Podman AI Lab and created a RAG chatbot deployed on OpenShift and OpenShift AI.
 </li>
 </ol>
-
-
+<br/>
+<i>I want to give a special thanks to the maintainers of the below repositories. </i>
+<ul>
+<li>
+<i><a href="https://github.com/rh-aiservices-bu/llm-on-openshift">LLM On OpenShift</a> - The notebook to ingest data into Elasticsearch.</i>
+</li>
+<li>
+<i><a href="https://github.com/redhat-ai-services/ai-accelerator">AI Accelerator</a> - The code used to deploy the various components on OpenShift and OpenShift AI.</i>
+</li>
+</ul>

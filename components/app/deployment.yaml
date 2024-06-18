@@ -31,11 +31,11 @@ spec:
               protocol: TCP
           env:
             - name: MODEL_ENDPOINT
-              value: 'https://mistral7b-podman-ai-lab-rag-project.apps.cluster-6f5sd.dynamic.redhatworkshops.io'
+              value: '<OPENSHIFT_AI_MODEL_INFERENCE_ENDPOINT>'
             - name: ELASTIC_URL
-              value: 'https://172.31.251.93:9200'
+              value: 'https://<YOUR_ELASTICSEARCH_SERVICE_URL>:9200'
             - name: ELASTIC_PASS
-              value: '0OF95m0oadUMf189q56R2YQq'
+              value: '<YOUR_ELASTICSEARCH_PASSWORD>'
           resources: {}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
