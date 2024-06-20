@@ -20,8 +20,29 @@ The following article shows you how to go from a chatbot reciepe in the Podman D
 
 ![Architecture](img/high_level_overview_arch.png)
 
+<ol>
+<li>
+An LLM is downloaded through Podman AI Lab.
+</li>
+<li>
+A chat bot recipe is started in Podman AI Lab with the downloaded model.
+</li>
+<li>
+The chat bot recipe code from Podman AI Lab is updated in VS Code with LangChain to connect to the Elasticsearch vector database and OpenShift AI model serving inference endpoint.
+</li>
+<li>
+An ingestion notebook is run in OpenShift AI to add data to the Elasticsearch vector database. 
+</li>
+<li>
+The LLM we downloaded from Podman AI Lab is deployed to OpenShift AI on a custom serving runtime.
+</li>
+<li>
+The updated chat bot with LangChain is built as a container and deployed to OpenShift.
+</li>
+</ol>
+
 ## <div id="req">Requirements</a>
-It is expected that you have admin access to an OpenShift 4.12+ cluster. The follwing code was tested with an OpenShift 4.15 cluster.
+It is expected that you have admin access to an OpenShift 4.12+ cluster. The follwing code was tested with an OpenShift 4.15 cluster and OpenShift AI 2.9.
 
 # <div id="podman_ai_lab">Podman AI Lab</a>
 ## Install Podman Desktop and Podman AI Lab extension
