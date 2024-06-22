@@ -35,10 +35,10 @@ This article will walk you through how to go from a chatbot reciepe in the Podma
 An LLM is downloaded through Podman AI Lab.
 </li>
 <li>
-A chat bot recipe is started in Podman AI Lab with the downloaded model.
+A chatbot recipe is started in Podman AI Lab with the downloaded model.
 </li>
 <li>
-The chat bot recipe code from Podman AI Lab is updated in VS Code with LangChain to connect to the Elasticsearch vector database and OpenShift AI model serving inference endpoint.
+The chatbot recipe code from Podman AI Lab is updated in VS Code with LangChain to connect to the Elasticsearch vector database and OpenShift AI model serving inference endpoint.
 </li>
 <li>
 An ingestion notebook is run in OpenShift AI to add data to the Elasticsearch vector database. 
@@ -47,7 +47,7 @@ An ingestion notebook is run in OpenShift AI to add data to the Elasticsearch ve
 The LLM we downloaded from Podman AI Lab is deployed to OpenShift AI on a custom serving runtime.
 </li>
 <li>
-The updated chat bot with LangChain is built as a container and deployed to OpenShift.
+The updated chatbot with LangChain is built as a container and deployed to OpenShift.
 </li>
 </ol>
 
