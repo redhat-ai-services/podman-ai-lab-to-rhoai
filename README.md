@@ -2,9 +2,19 @@
 
 **Overview**
 
-The following article shows you how to go from a chatbot reciepe in the Podman Desktop AI Lab extension to a RAG chatbot deployed on OpenShift and OpenShift AI.
+Level: Beginner
+<br/>
+Time: 1 hour
+<br/>
+
+A common statement the we've been hearing from customers recently is "I want the ability to chat with my documents". Many customers are aware that Large Language Models (LLMs) provide them the ability to do that, but the implementation details are unknown as well as the possible risks. These unknowns make it difficult to understand where to start. 
 <br/><br/>
-<b>TODO</b> STATE THE GOAL
+Thankfully, there is a path forward with the newly released Podman AI Lab extension. Podman AI Lab allows you to pull down models and test them out locally to see how they perform and which one(s) will work best for your use case(s). The chatbot recipe within Podman AI Lab makes integrating LLMs with applications as easy as the click of a button.
+<br/><br/>
+Podman AI Lab is an excellent place to evaluate and test models, but you'll eventually want to see how this will actually be deployed in your enterprise. For that, we can use OpenShift and OpenShift AI along with the Elasticsearch vector database to create a Retrieval Augmented Generation (RAG) chatbot.
+<br/><br/>
+This article will walk you through how to go from a chatbot reciepe in the Podman AI Lab extension to a RAG chatbot deployed on OpenShift and OpenShift AI. 
+<br/><br/>
 
 * <a href="#arch">Architecture</a>
 * <a href="#req">Requirements</a>
@@ -245,7 +255,7 @@ After all of the data is stored into our vector database we can directly query i
 </ol>
 
 # <div id="deploy_minio">Deploy s3 Storage (Minio)</a>
-OpenShift AI model serving has a dependency on s3 storage. For this, we'll deploy Minio. 
+OpenShift AI model serving has a dependency on s3 storage. We'll deploy Minio for this tutorial, but any s3 compatible storage should work. For an enterprise s3 storage solution consider <a href="https://www.redhat.com/en/technologies/cloud-computing/openshift-data-foundation">OpenShift Data Foundation</a>.
 <ol>
 <li>
 Make sure you're still logged into your cluster in your terminal. Run the below command to deploy Minio.
@@ -586,7 +596,7 @@ Congratulations! You've successfully taken a model and application from Podman A
 <i>I want to give a special thanks to the maintainers of the below repositories. </i>
 <ul>
 <li>
-<i><a href="https://github.com/rh-aiservices-bu/llm-on-openshift">LLM On OpenShift</a> - The notebook to ingest data into Elasticsearch.</i>
+<i><a href="https://github.com/rh-aiservices-bu/llm-on-openshift">LLM On OpenShift</a> - The notebook to ingest data into Elasticsearch and the Langchain code added to the chatbot app.</i>
 </li>
 <li>
 <i><a href="https://github.com/redhat-ai-services/ai-accelerator">AI Accelerator</a> - The code used to deploy the various components on OpenShift and OpenShift AI.</i>
