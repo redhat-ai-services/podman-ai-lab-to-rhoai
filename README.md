@@ -19,7 +19,7 @@ This article will walk you through how to go from a chatbot reciepe in the Podma
 * <a href="#arch">Architecture</a>
 * <a href="#req">Requirements</a>
 * <a href="#podman_ai_lab">Podman AI Lab</a>
-* <a href="#deploy_rhoai">Deploy RHAOI</a>
+* <a href="#deploy_rhoai">Deploy RHOAI</a>
 * <a href="#deploy_elastic">Deploy Elasticsearch Vector DB</a>
 * <a href="#deploy_minio">Deploy s3 Storage (Minio)</a>
 * <a href="#custom_runtime">Create Custom Model Serving Runtime</a>
