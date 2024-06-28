@@ -329,9 +329,9 @@ We'll be using the single stack serving in OpenShift AI so we'll want use a trus
 Run the below oc commands
 <ul>
 <li>
-Get the name of the ingress cert we will need to copy.
+Get the name of the ingress cert we will need to copy. Select a secret that has <b>cert</b> in the name.
 <pre>
-oc get secrets -n openshift-ingress | grep ingress-certs-*
+oc get secrets -n openshift-ingress | grep cert
 </pre>
 
 ![Ingress Cert Secret Name](img/ingress_cert_secret.png)
