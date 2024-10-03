@@ -360,6 +360,20 @@ cd ..
 </pre>
 <b>NOTE:</b><i>You can delete the ingress-certs folder after you have created the knative-serving-cert secret.</i>
 </li>
+<li>
+To avoid possible SSL errors with the connection to the Minio bucket when creating your model server in the following steps, add a custom CA bundle to default-dsci:
+
+<pre>
+oc get secret -n openshift-ingress-operator router-ca -o jsonpath='{.data.tls\.crt}' | base64 -d > openshift-ca-bundle.pem
+
+oc get configmap -n openshift-config openshift-service-ca.crt -o jsonpath='{.data.service-ca\.crt}' >> openshift-ca-bundle.pem
+
+CA_BUNDLE_FILE=./openshift-ca-bundle.pem
+
+oc patch dscinitialization default-dsci --type='json' -p='[{"op":"replace","path":"/spec/trustedCABundle/customCABundle","value":"'"$(awk '{printf "%s\\n", $0}' $CA_BUNDLE_FILE)"'"}]'
+</pre>
+<b>NOTE:</b><i>You can delete the openshift-ca-bundle.pem file after you have patched your dscinitialization, or you can add it to your trusted CA sources if it's necessary.</i>
+</li>
 </ul>
 <li>
 Run the following oc commands to enable the Single Model Serving runtime for OpenShift AI. 
@@ -504,6 +518,48 @@ combined population, it is much larger at around 13,022 square
 kilometers (5,028 square miles). This encompasses more than just the city of Paris.",
 "role":"assistant"},"logprobs":null,"finish_reason":"stop"}],"usage":{"prompt_tokens":32,"completion
 </pre>
+
+If you face any SSL errors when running the previous command, try to add the max_tokens limit to 100, which will get you safely under the 60s timeout limit of the Knative queue-proxy service (PS. The use of jq is optional):
+
+<pre>curl -k --location 'https://<b>YOUR-OPENSHIFT-AI-INFERENCE-ENDPOINT</b>/v1/chat/completions' --header 'Content-Type: application/json' --data '{
+  "messages": [
+    {
+      "content": "You are a helpful assistant.",
+      "role": "system"
+    },
+    {
+      "content": "How large is the capital of France?",
+      "role": "user"
+    }
+  ],
+  "max_tokens": 100
+}' | jq .
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1011  100   793  100   218     14      3  0:01:12  0:00:55  0:00:17   174
+{
+  "id": "chatcmpl-687c22c8-d0ba-4ea4-a012-d4b64069d7a2",
+  "object": "chat.completion",
+  "created": 1727727459,
+  "model": "/mnt/models/mistral-7b-instruct-v0.2.Q4_K_M.gguf",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "content": " The size of a city's area, including its urban and rural parts, is typically measured in square kilometers or square miles. However, when referring to the size of a city's capital, people usually mean the size of its urban core or central business district rather than the entire metropolitan area. In this context, Paris, the capital city of France, has an urban area of approximately 105 square kilometers (40.5 square miles). However, if you meant",
+        "role": "assistant"
+      },
+      "logprobs": null,
+      "finish_reason": "length"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 32,
+    "completion_tokens": 100,
+    "total_tokens": 132
+  }
+}
+</pre>
 </li>
 </ol>
 
@@ -542,6 +598,11 @@ The last updates to the code are just to format the response so that the relevan
 </li>
 <li>
 You can build the Containerfile and push it to your own repository or you can use the one at quay.io/jhurlocker/elastic-vectordb-chat.
+</li>
+<li>
+If the chatbot app has SSL failures or timeouts similar to those mentioned in item 4 of the previous subtitle, add the max_tokens parameter to the chatbot_ui.py code in the ChatOpenAI connection part. Or if you want a built image with this parameter, you can use quay.io/alexonoliveira/elastic-vectordb-chat:latest.
+
+![Chatbot RAG](img/chatbot_vscode_maxtokens.png)
 </li>
 <li>
 Update the ./components/deployment.yaml file with your values for the MODEL_ENDPOINT, ELASTIC_URL, and ELASTIC_PASS environment variables.
