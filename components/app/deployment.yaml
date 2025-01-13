@@ -31,7 +31,7 @@ spec:
               protocol: TCP
           env:
             - name: MODEL_ENDPOINT
-              value: 'https://mistral7b-podman-ai-lab-rag-project.apps.ocp-5.datsci.softergee.si'
+              value: 'https://mistral7b.podman-ai-lab-rag-project.svc.cluster.local'
             - name: ELASTIC_URL
               value: '172.30.137.93:9200'
             - name: ELASTIC_PASS
