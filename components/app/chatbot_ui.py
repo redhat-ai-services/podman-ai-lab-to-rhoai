@@ -40,6 +40,50 @@ elasticsearch_pass = os.getenv("ELASTIC_PASS")
 print("--- MODEL SERVICE --- ", model_service)
 print("--- ELASTICSEARCH URL --- ", elasticsearch_url)
 
+# Initialize Elasticsearch connection early
+es = None
+
+# Check if Elasticsearch is configured
+if elasticsearch_url:
+    try:
+        if elasticsearch_pass and elasticsearch_pass != "your_elastic_password_here" and elasticsearch_pass != "no_password_needed":
+            # With authentication
+            es = Elasticsearch(
+                hosts=[elasticsearch_url],
+                basic_auth=("elastic", elasticsearch_pass),
+                verify_certs=False
+            )
+            print(f"Elasticsearch connected to: {elasticsearch_url} with authentication")
+        else:
+            # Without authentication (local development)
+            es = Elasticsearch(
+                hosts=[elasticsearch_url],
+                verify_certs=False
+            )
+            print(f"Elasticsearch connected to: {elasticsearch_url} without authentication")
+        
+        # Test the connection - use HTTP request instead of client methods
+        try:
+            import requests
+            # Test via HTTP request
+            response = requests.get(f"{elasticsearch_url}/_cluster/health", timeout=5)
+            if response.status_code == 200:
+                health_data = response.json()
+                if health_data.get('status') in ['green', 'yellow']:
+                    print("✅ Elasticsearch connection successful (HTTP health check)!")
+                else:
+                    print(f"⚠️ Elasticsearch status: {health_data.get('status')}")
+            else:
+                print(f"⚠️ Elasticsearch HTTP status: {response.status_code}")
+        except Exception as e:
+            print(f"⚠️ Elasticsearch connection test warning: {e}")
+            # Continue anyway - the client might still work
+    except Exception as e:
+        print(f"❌ Elasticsearch connection error: {e}")
+        es = None
+else:
+    print("Elasticsearch not configured - running in local mode only")
+
 # Handle different model service formats
 if model_service:
     if model_service.endswith('/v1'):
@@ -174,49 +218,34 @@ llm = ChatOpenAI(
                                             expand_new_thoughts=True,
                                             collapse_completed_thoughts=True)])
 
-# Check if Elasticsearch is configured
-if elasticsearch_url:
-    try:
-        if elasticsearch_pass and elasticsearch_pass != "your_elastic_password_here" and elasticsearch_pass != "no_password_needed":
-            # With authentication
-            es = Elasticsearch(
-                hosts=[elasticsearch_url],
-                basic_auth=("elastic", elasticsearch_pass),
-                verify_certs=False
-            )
-            print(f"Elasticsearch connected to: {elasticsearch_url} with authentication")
-        else:
-            # Without authentication (local development)
-            es = Elasticsearch(
-                hosts=[elasticsearch_url],
-                verify_certs=False
-            )
-            print(f"Elasticsearch connected to: {elasticsearch_url} without authentication")
-        
-        # Test the connection
-        if es.ping():
-            print("✅ Elasticsearch connection successful!")
-        else:
-            print("❌ Elasticsearch connection failed")
-            es = None
-    except Exception as e:
-        print(f"❌ Elasticsearch connection error: {e}")
-        es = None
-else:
-    print("Elasticsearch not configured - running in local mode only")
-    es = None
-
 embeddings = HuggingFaceEmbeddings()
 
 # Create ElasticsearchStore only if Elasticsearch is available
 if es:
-    db = ElasticsearchStore.from_documents(
-        [],
-        embeddings,
-        index_name="rhoai-docs",
-        es_connection=es,
-    )
-    print("ElasticsearchStore created successfully")
+    try:
+        # Try to create index with explicit dimensions
+        db = ElasticsearchStore.from_documents(
+            [],
+            embeddings,
+            index_name="rhoai-docs",
+            es_connection=es,
+            dims_length=768,  # Specify embedding dimensions
+        )
+        print("ElasticsearchStore created successfully")
+    except Exception as e:
+        print(f"⚠️ ElasticsearchStore creation failed: {e}")
+        # Try alternative approach - create empty store
+        try:
+            db = ElasticsearchStore(
+                index_name="rhoai-docs",
+                es_connection=es,
+                embedding=embeddings,
+            )
+            print("ElasticsearchStore created with alternative method")
+        except Exception as e2:
+            print(f"⚠️ Alternative method also failed: {e2}")
+            print("Falling back to local mode only")
+            db = None
 else:
     print("ElasticsearchStore not created - running in local mode only")
     db = None

@@ -33,9 +33,9 @@ spec:
             - name: MODEL_ENDPOINT
               value: 'https://mistral7b.podman-ai-lab-rag-project.svc.cluster.local'
             - name: ELASTIC_URL
-              value: '172.30.137.93:9200'
+              value: 'http://172.30.206.96:9200'
             - name: ELASTIC_PASS
-              value: '6U8IoE0142M8vMkuYoC337WC'
+              value: 'dI3kg53TQ4t8Kf53RgY69M3M'
           resources: {}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
